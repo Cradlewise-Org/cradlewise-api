@@ -14,7 +14,6 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 
 ```json
 {
-  "baby_id": "12345",
   "status": "sleeping",
   "since": "2026-03-12T22:15:00Z",
   "is_in_crib": true,
@@ -46,6 +45,7 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
 - [Rate Limits](#rate-limits)
 - [Error Codes](#error-codes)
 - [Examples](#examples)
+- [Detailed Endpoint Documentation](#detailed-endpoint-documentation)
 - [FAQ](#faq)
 
 ---
@@ -122,7 +122,6 @@ GET /api/v1/baby/status
 
 ```json
 {
-  "baby_id": "12345",
   "status": "sleeping",
   "since": "2026-03-12T22:15:00.000000Z",
   "is_in_crib": true,
@@ -260,7 +259,7 @@ GET /api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06 00:00:00&end_time=202
 ```json
 {
   "timezone": "America/Los_Angeles",
-  "age_banner_text": "Baby is 13 months old",
+  "age_banner_text": "13 months old",
   "avg_sleep_in_mins": 720.0,
   "avg_day_sleep_in_mins": 180.0,
   "avg_night_sleep_in_mins": 540.0,
@@ -406,7 +405,7 @@ GET /api/v1/sleep/monthly-sleep-graph?start_time=2026-01-01 00:00:00&end_time=20
 
 ```json
 {
-  "age_banner_text": "Baby is 13 months old",
+  "age_banner_text": "13 months old",
   "plot_values": [
     {
       "day_sleep_in_mins": 180.0,
@@ -693,6 +692,27 @@ curl -H "Authorization: Bearer $TOKEN" \
 curl -H "Authorization: Bearer $TOKEN" \
   "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2026-01-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
+
+---
+
+## Detailed Endpoint Documentation
+
+Each endpoint has a comprehensive deep-dive doc with full response schemas, edge cases, practical code examples, and gotchas discovered through testing.
+
+| Endpoint | Doc |
+|----------|-----|
+| Baby Status | [docs/baby-status.md](docs/baby-status.md) |
+| Sleep Sessions (C-Chart) | [docs/c-chart.md](docs/c-chart.md) |
+| Day Metrics | [docs/day-metrics.md](docs/day-metrics.md) |
+| Weekly Sleep Graph | [docs/weekly-sleep-graph.md](docs/weekly-sleep-graph.md) |
+| Weekly Rise & Bed Time | [docs/weekly-rise-and-bed-time.md](docs/weekly-rise-and-bed-time.md) |
+| Weekly Nap Planner | [docs/weekly-nap-planner.md](docs/weekly-nap-planner.md) |
+| Weekly Sleep Metrics | [docs/weekly-sleep-metrics.md](docs/weekly-sleep-metrics.md) |
+| Weekly Longest Stretch | [docs/weekly-longest-stretch.md](docs/weekly-longest-stretch.md) |
+| Monthly Sleep Graph | [docs/monthly-sleep-graph.md](docs/monthly-sleep-graph.md) |
+| Monthly Rise & Bed Time | [docs/monthly-rise-and-bed-time.md](docs/monthly-rise-and-bed-time.md) |
+| Monthly Longest Stretch | [docs/monthly-longest-stretch.md](docs/monthly-longest-stretch.md) |
+| Monthly Sleep Metrics | [docs/monthly-sleep-metrics.md](docs/monthly-sleep-metrics.md) |
 
 ---
 

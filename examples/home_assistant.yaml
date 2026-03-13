@@ -21,7 +21,6 @@ rest:
           - since
           - is_in_crib
           - crib_mode
-          - baby_id
           - timestamp
 
 # ──────────────────────────────────────────────
