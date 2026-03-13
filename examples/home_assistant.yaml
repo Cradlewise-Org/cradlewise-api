@@ -1,0 +1,106 @@
+# Cradlewise API — Home Assistant Configuration
+#
+# Add these to your Home Assistant configuration.yaml and automations.yaml.
+# Replace "cw_your_token_here" with your actual Cradlewise API token.
+#
+# Documentation: https://github.com/cradlewise/api
+
+# ──────────────────────────────────────────────
+# configuration.yaml — REST sensor
+# ──────────────────────────────────────────────
+
+rest:
+  - resource: https://api.cradlewise.com/api/v1/baby/status
+    headers:
+      Authorization: "Bearer cw_your_token_here"
+    scan_interval: 30
+    sensor:
+      - name: "Baby Status"
+        value_template: "{{ value_json.status }}"
+        json_attributes:
+          - since
+          - is_in_crib
+          - crib_mode
+          - baby_id
+          - timestamp
+
+# ──────────────────────────────────────────────
+# automations.yaml — Example automations
+# ──────────────────────────────────────────────
+
+automation:
+  # Mute doorbell when baby falls asleep
+  - alias: "Mute doorbell when baby sleeps"
+    trigger:
+      - platform: state
+        entity_id: sensor.baby_status
+        to: "sleeping"
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.doorbell_chime
+      - service: notify.mobile_app
+        data:
+          message: "Baby fell asleep. Doorbell muted."
+
+  # Unmute doorbell when baby wakes
+  - alias: "Unmute doorbell when baby wakes"
+    trigger:
+      - platform: state
+        entity_id: sensor.baby_status
+        from: "sleeping"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.doorbell_chime
+
+  # Nightlight on wake
+  - alias: "Nursery nightlight on wake"
+    trigger:
+      - platform: state
+        entity_id: sensor.baby_status
+        to: "awake"
+    condition:
+      - condition: time
+        after: "18:00:00"
+        before: "08:00:00"
+    action:
+      - service: light.turn_on
+        target:
+          entity_id: light.nursery_nightlight
+        data:
+          brightness_pct: 10
+          color_temp: 500  # warm white
+
+  # Notify on crying
+  - alias: "Alert when baby is crying"
+    trigger:
+      - platform: state
+        entity_id: sensor.baby_status
+        to: "crying"
+    action:
+      - service: notify.mobile_app
+        data:
+          title: "Baby is crying"
+          message: "Crying detected since {{ state_attr('sensor.baby_status', 'since') }}"
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.kitchen_speaker
+        data:
+          media_content_id: "media-source://tts/Baby is crying"
+          media_content_type: "provider"
+
+  # Start bottle warmer when baby wakes in the morning
+  - alias: "Start bottle warmer on morning wake"
+    trigger:
+      - platform: state
+        entity_id: sensor.baby_status
+        to: "awake"
+    condition:
+      - condition: time
+        after: "05:00:00"
+        before: "09:00:00"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.bottle_warmer
