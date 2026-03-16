@@ -1,4 +1,6 @@
-# Monthly Sleep Metrics
+# Monthly Sleep Metrics `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Composite endpoint that combines sleep graph, rise/bed time, longest stretch, and nap data into a single response — indexed by your baby's age in months. This is the most convenient endpoint for building a monthly overview dashboard in one API call.
 

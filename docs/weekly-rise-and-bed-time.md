@@ -1,4 +1,6 @@
-# Weekly Rise and Bed Time
+# Weekly Rise and Bed Time `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Weekly averages and daily plot data for rise time and bed time. Best for trend charts — shows how the baby's wake-up and sleep-onset times shift across a week.
 

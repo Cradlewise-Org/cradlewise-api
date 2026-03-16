@@ -1,4 +1,6 @@
-# Monthly Rise and Bed Time
+# Monthly Rise and Bed Time `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Monthly averages for rise time and bed time. One entry per month with the average wake-up and sleep-onset times for that period. Best for long-term trend analysis — shows how the baby's schedule shifts month over month.
 

@@ -1,4 +1,6 @@
-# Weekly Longest Stretch
+# Weekly Longest Stretch `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 The longest uninterrupted sleep stretch per day, with averages across the queried period. Use this to track whether your baby's longest continuous sleep block is trending longer over time — the key metric most parents care about for "sleeping through the night."
 

@@ -1,5 +1,9 @@
 # Cradlewise API
 
+> **Beta Notice:** This API is an early-access project built for tinkerers and developers who want to build on top of their Cradlewise crib data. It is under active development — endpoints may change, return unexpected data, or experience downtime. We share it in the spirit of openness, but please set expectations accordingly: this is a side project, not a production service with an SLA.
+>
+> Found a bug or have a request? Email **support@cradlewise.com** — we read everything, but may not be able to address every issue immediately.
+
 Official REST API for accessing your baby's sleep data and real-time status from your Cradlewise smart crib.
 
 **Available to Nurture Plus subscribers.** Generate your API token from the [Nurture web portal](https://nurture.cradlewise.com).
@@ -110,7 +114,7 @@ All endpoints are `GET` requests. The baby is identified automatically from your
 
 ---
 
-### Baby Status
+### Baby Status `Stable`
 
 Real-time status of your baby. Designed for polling (up to every 30 seconds).
 
@@ -146,7 +150,7 @@ GET /api/v1/baby/status
 
 ---
 
-### Sleep Sessions (C-Chart)
+### Sleep Sessions (C-Chart) `Stable`
 
 Individual sleep sessions within a date range — the most granular view of crib activity.
 
@@ -192,7 +196,7 @@ GET /api/v1/sleep/c-chart?start_time=2026-03-12 00:00:00&end_time=2026-03-13 00:
 
 ---
 
-### Day Metrics
+### Day Metrics `Stable`
 
 Key daily metrics — soothes, wake windows, nap counts, and more for a specific day.
 
@@ -246,7 +250,7 @@ GET /api/v1/sleep/day-metrics?start_time=2026-03-12 00:00:00&end_time=2026-03-13
 
 ---
 
-### Weekly Sleep Graph
+### Weekly Sleep Graph `Beta`
 
 Daily sleep totals for a week, broken down by day vs. night sleep.
 
@@ -284,7 +288,7 @@ GET /api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06 00:00:00&end_time=202
 
 ---
 
-### Weekly Rise & Bed Time
+### Weekly Rise & Bed Time `Beta`
 
 Average and daily rise/bed times for the week.
 
@@ -318,7 +322,7 @@ GET /api/v1/sleep/weekly-rise-and-bed-time?start_time=2026-03-06 00:00:00&end_ti
 
 ---
 
-### Weekly Nap Planner
+### Weekly Nap Planner `Beta`
 
 Nap duration and wake window trends for the week.
 
@@ -343,7 +347,7 @@ GET /api/v1/sleep/weekly-nap-planner?start_time=2026-03-06 00:00:00&end_time=202
 
 ---
 
-### Weekly Sleep Metrics
+### Weekly Sleep Metrics `Beta`
 
 Combined weekly view — aggregates sleep graph, nap planner, rise/bed time, and longest stretch into one response.
 
@@ -366,7 +370,7 @@ Each sub-object contains the same data as its individual endpoint. Use this to f
 
 ---
 
-### Weekly Longest Stretch
+### Weekly Longest Stretch `Beta`
 
 Longest continuous sleep stretch per day across the week.
 
@@ -393,7 +397,7 @@ GET /api/v1/sleep/weekly-longest-stretch?start_time=2026-03-06 00:00:00&end_time
 
 ---
 
-### Monthly Sleep Graph
+### Monthly Sleep Graph `Beta`
 
 Monthly sleep totals over a longer date range.
 
@@ -421,7 +425,7 @@ The `month` field represents the month this data point covers. One entry per mon
 
 ---
 
-### Monthly Rise & Bed Time
+### Monthly Rise & Bed Time `Beta`
 
 ```
 GET /api/v1/sleep/monthly-rise-and-bed-time?start_time=2026-01-01 00:00:00&end_time=2026-03-13 00:00:00
@@ -443,7 +447,7 @@ GET /api/v1/sleep/monthly-rise-and-bed-time?start_time=2026-01-01 00:00:00&end_t
 
 ---
 
-### Monthly Longest Stretch
+### Monthly Longest Stretch `Beta`
 
 ```
 GET /api/v1/sleep/monthly-longest-stretch?start_time=2026-01-01 00:00:00&end_time=2026-03-13 00:00:00
@@ -466,7 +470,7 @@ GET /api/v1/sleep/monthly-longest-stretch?start_time=2026-01-01 00:00:00&end_tim
 
 ---
 
-### Monthly Sleep Metrics
+### Monthly Sleep Metrics `Beta`
 
 Combined monthly view — all monthly metrics in one response.
 
@@ -528,7 +532,7 @@ For home automation, poll `/baby/status` every 30 seconds only during the hours 
 | `404` | Not Found | No data for the requested resource |
 | `422` | Validation Error | Invalid request parameters |
 | `429` | Too Many Requests | Rate limit exceeded |
-| `500` | Server Error | Unexpected error — please report via Issues |
+| `500` | Server Error | Unexpected error — please report to support@cradlewise.com |
 
 **Error response format:**
 
@@ -743,27 +747,33 @@ Not yet. Webhooks and real-time push notifications are on our roadmap. For now, 
 Yes — paste this README into any AI assistant and ask it to build integrations for you. The API is designed to be AI-parseable. An MCP (Model Context Protocol) server is on our roadmap for native AI tool integration.
 
 **I found a bug or have a feature request.**
-Open an issue on this repo. We monitor it actively.
+Email **support@cradlewise.com**. We read everything, but this is a side project to support tinkerers — we may not be able to address every issue or request immediately.
+
+**What does "Beta" mean on an endpoint?**
+Beta endpoints are functional but still being refined. Response schemas, field names, or data accuracy may change without notice. Stable endpoints have a locked schema and are safe to build automations on.
+
+**Is there an SLA or uptime guarantee?**
+No. This API is provided as-is, without guarantees around uptime, latency, or data accuracy. It runs on the same infrastructure as our internal tools, but is not monitored to production standards.
 
 ---
 
 ## Endpoint Quick Reference
 
-| Method | Endpoint | Params | Description |
-|--------|----------|--------|-------------|
-| GET | `/api/v1/baby/status` | — | Real-time baby status |
-| GET | `/api/v1/sleep/c-chart` | `start_time`, `end_time` | Individual sleep sessions |
-| GET | `/api/v1/sleep/day-metrics` | `start_time`, `end_time` | Daily key metrics |
-| GET | `/api/v1/sleep/weekly-sleep-graph` | `start_time`, `end_time` | Daily sleep totals (week) |
-| GET | `/api/v1/sleep/weekly-rise-and-bed-time` | `start_time`, `end_time` | Rise/bed times (week) |
-| GET | `/api/v1/sleep/weekly-nap-planner` | `start_time`, `end_time` | Nap/wake windows (week) |
-| GET | `/api/v1/sleep/weekly-sleep-metrics` | `start_time`, `end_time` | All weekly metrics combined |
-| GET | `/api/v1/sleep/weekly-longest-stretch` | `start_time`, `end_time` | Longest sleep stretch (week) |
-| GET | `/api/v1/sleep/monthly-sleep-graph` | `start_time`, `end_time` | Monthly sleep totals |
-| GET | `/api/v1/sleep/monthly-rise-and-bed-time` | `start_time`, `end_time` | Rise/bed times (monthly) |
-| GET | `/api/v1/sleep/monthly-longest-stretch` | `start_time`, `end_time` | Longest stretch (monthly) |
-| GET | `/api/v1/sleep/monthly-sleep-metrics` | `start_time`, `end_time` | All monthly metrics combined |
+| Method | Endpoint | Params | Status | Description |
+|--------|----------|--------|--------|-------------|
+| GET | `/api/v1/baby/status` | — | Stable | Real-time baby status |
+| GET | `/api/v1/sleep/c-chart` | `start_time`, `end_time` | Stable | Individual sleep sessions |
+| GET | `/api/v1/sleep/day-metrics` | `start_time`, `end_time` | Stable | Daily key metrics |
+| GET | `/api/v1/sleep/weekly-sleep-graph` | `start_time`, `end_time` | Beta | Daily sleep totals (week) |
+| GET | `/api/v1/sleep/weekly-rise-and-bed-time` | `start_time`, `end_time` | Beta | Rise/bed times (week) |
+| GET | `/api/v1/sleep/weekly-nap-planner` | `start_time`, `end_time` | Beta | Nap/wake windows (week) |
+| GET | `/api/v1/sleep/weekly-sleep-metrics` | `start_time`, `end_time` | Beta | All weekly metrics combined |
+| GET | `/api/v1/sleep/weekly-longest-stretch` | `start_time`, `end_time` | Beta | Longest sleep stretch (week) |
+| GET | `/api/v1/sleep/monthly-sleep-graph` | `start_time`, `end_time` | Beta | Monthly sleep totals |
+| GET | `/api/v1/sleep/monthly-rise-and-bed-time` | `start_time`, `end_time` | Beta | Rise/bed times (monthly) |
+| GET | `/api/v1/sleep/monthly-longest-stretch` | `start_time`, `end_time` | Beta | Longest stretch (monthly) |
+| GET | `/api/v1/sleep/monthly-sleep-metrics` | `start_time`, `end_time` | Beta | All monthly metrics combined |
 
 ---
 
-*Built by Cradlewise. First baby monitor company with an official API.*
+*Built by Cradlewise for tinkerers and developers. First baby monitor company with a public API.*

@@ -1,4 +1,6 @@
-# Weekly Sleep Metrics
+# Weekly Sleep Metrics `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Composite endpoint that combines sleep graph and nap planner data into a single response — weekly sleep totals with day/night breakdown plus individual nap-level detail. This is the most convenient endpoint for building a full weekly sleep dashboard in one call instead of hitting `weekly-sleep-graph` and `weekly-nap-planner` separately.
 

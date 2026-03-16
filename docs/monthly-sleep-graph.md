@@ -1,4 +1,6 @@
-# Monthly Sleep Graph
+# Monthly Sleep Graph `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Monthly sleep totals broken down by day and night — one data point per month with day/night split. This is the best endpoint for tracking long-term sleep trends, building month-over-month comparison charts, or analyzing seasonal sleep patterns.
 

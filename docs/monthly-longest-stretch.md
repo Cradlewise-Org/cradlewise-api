@@ -1,4 +1,6 @@
-# Monthly Longest Stretch
+# Monthly Longest Stretch `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Monthly view of your baby's longest uninterrupted sleep stretch per month — useful for tracking sleep consolidation progress over time. Each month returns the single longest continuous sleep period along with three representations: raw minutes, decimal hours, and a human-readable display string.
 

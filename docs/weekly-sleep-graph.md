@@ -1,4 +1,6 @@
-# Weekly Sleep Graph
+# Weekly Sleep Graph `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Weekly sleep totals broken down by day and night — average sleep durations across the period, plus daily breakdowns. This is the best endpoint for building a weekly sleep bar chart or tracking sleep trends over time.
 

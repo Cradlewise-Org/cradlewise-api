@@ -1,4 +1,6 @@
-# Weekly Nap Planner
+# Weekly Nap Planner `Beta`
+
+> **Beta:** This endpoint is functional but still being refined. Response schema or data accuracy may change without notice.
 
 Aggregated nap and sleep data over a multi-day window — average durations, wake windows, and individual sleep segments with day/night classification. Use this endpoint to build weekly sleep summaries, track nap trends, or identify the longest uninterrupted sleep stretch.
 
