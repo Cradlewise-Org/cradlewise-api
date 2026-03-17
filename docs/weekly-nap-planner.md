@@ -23,7 +23,7 @@ GET /api/v1/sleep/weekly-nap-planner
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-nap-planner?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-nap-planner?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -120,7 +120,7 @@ Set `start_time` to the beginning of the week and `end_time` to 7 days later:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-nap-planner?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-nap-planner?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: Segments that **started before** your `start_time` but ended within the window are included. A segment starting February 27th may appear in a March 6–13 query. This is correct — you're seeing the full segment, not a truncated slice.
@@ -261,7 +261,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 7 days
 end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)

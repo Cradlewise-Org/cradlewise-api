@@ -23,7 +23,7 @@ GET /api/v1/sleep/weekly-longest-stretch
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-longest-stretch?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-longest-stretch?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -98,7 +98,7 @@ This applies to all sleep endpoints, not just Weekly Longest Stretch.
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-longest-stretch?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-longest-stretch?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Returns up to 7 entries in `plot_values` (one per day with recorded sleep data).
@@ -111,7 +111,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 7 days
 end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -219,7 +219,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 7 days
 end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)

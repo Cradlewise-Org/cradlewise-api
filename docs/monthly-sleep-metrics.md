@@ -23,7 +23,7 @@ GET /api/v1/sleep/monthly-sleep-metrics
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2025-11-01%2000:00:00&end_time=2026-01-01%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2025-11-01%2000:00:00&end_time=2026-01-01%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -170,7 +170,7 @@ Use a wide date range to capture all months since birth:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2025-09-01%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2025-09-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 The API returns only months that have data — it won't pad missing months with zeros.
@@ -179,7 +179,7 @@ The API returns only months that have data — it won't pad missing months with 
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2025-11-01%2000:00:00&end_time=2025-12-01%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2025-11-01%2000:00:00&end_time=2025-12-01%2000:00:00"
 ```
 
 Returns a single entry in each `plot_values` array (if data exists for that period).
@@ -191,7 +191,7 @@ import requests
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 resp = requests.get(f"{BASE}/sleep/monthly-sleep-metrics", headers=HEADERS, params={
     "start_time": "2025-09-01 00:00:00",

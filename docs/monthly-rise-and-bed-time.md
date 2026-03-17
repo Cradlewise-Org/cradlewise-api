@@ -23,7 +23,7 @@ GET /api/v1/sleep/monthly-rise-and-bed-time
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-rise-and-bed-time?start_time=2025-12-01%2000:00:00&end_time=2026-03-14%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-rise-and-bed-time?start_time=2025-12-01%2000:00:00&end_time=2026-03-14%2000:00:00"
 ```
 
 ---
@@ -91,7 +91,7 @@ params = {
 }
 
 resp = requests.get(
-    "https://api.cradlewise.com/api/v1/sleep/monthly-rise-and-bed-time",
+    "https://integrations.cradlewise.com/api/v1/sleep/monthly-rise-and-bed-time",
     headers=headers,
     params=params
 )

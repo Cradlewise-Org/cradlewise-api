@@ -23,7 +23,7 @@ GET /api/v1/sleep/weekly-sleep-graph
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -124,7 +124,7 @@ Set `start_time` to the first day and `end_time` to 7 days later:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Returns 7 entries in `plot_values`, one per day.
@@ -137,7 +137,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 7 days
 end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)

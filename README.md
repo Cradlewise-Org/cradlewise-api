@@ -6,14 +6,14 @@
 
 Official REST API for accessing your baby's sleep data and real-time status from your Cradlewise smart crib.
 
-**Available to Nurture Plus subscribers.** Generate your API token from the [Nurture web portal](https://nurture.cradlewise.com).
+**Available to Nurture Plus subscribers.** During beta, tokens are provided directly by the Cradlewise team.
 
 ## Quick Start
 
 ```bash
 # Get your baby's current status
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  https://api.cradlewise.com/api/v1/baby/status
+  https://integrations.cradlewise.com/api/v1/baby/status
 ```
 
 ```json
@@ -64,11 +64,9 @@ Authorization: Bearer cw_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 **Getting your token:**
 
-1. Log in to the [Nurture web portal](https://nurture.cradlewise.com)
-2. Go to **API Access** in the sidebar
-3. Select your baby from the dropdown
-4. Click **Generate API Token**
-5. Copy the token — it remains visible on the portal
+During the beta, API tokens are generated and shared directly by the Cradlewise team. If you're interested in API access, email **support@cradlewise.com**.
+
+> **Coming Soon:** Self-service token generation from the [Nurture web portal](https://mycrib.cradlewise.com). You'll be able to go to **API Access** in the sidebar, select your baby, and generate a token yourself. This is not yet available.
 
 **Token details:**
 
@@ -79,7 +77,7 @@ Authorization: Bearer cw_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 | Scope | One token per baby, read-only |
 | Baby ID | Resolved from token — never passed in requests |
 
-Generating a new token automatically revokes the previous one. You can also revoke a token manually from the portal. If your Nurture Plus subscription lapses, the API returns `403` — reactivating your subscription restores access with the same token.
+Generating a new token automatically revokes the previous one. If your Nurture Plus subscription lapses, the API returns `403` — reactivating your subscription restores access with the same token.
 
 ---
 
@@ -108,7 +106,7 @@ This matches what you see in the Cradlewise app. When querying date ranges, alig
 
 ## Endpoints
 
-Base URL: `https://api.cradlewise.com`
+Base URL: `https://integrations.cradlewise.com`
 
 All endpoints are `GET` requests. The baby is identified automatically from your token — no baby ID needed in the URL.
 
@@ -552,7 +550,7 @@ For home automation, poll `/baby/status` every 30 seconds only during the hours 
 import requests
 
 TOKEN = "cw_your_token_here"
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
 # Fetch last 7 days of sleep data
@@ -579,7 +577,7 @@ import requests
 import time
 
 TOKEN = "cw_your_token_here"
-URL = "https://api.cradlewise.com/api/v1/baby/status"
+URL = "https://integrations.cradlewise.com/api/v1/baby/status"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
 last_status = None
@@ -612,7 +610,7 @@ while True:
 
 ```javascript
 const TOKEN = "cw_your_token_here";
-const BASE = "https://api.cradlewise.com/api/v1";
+const BASE = "https://integrations.cradlewise.com/api/v1";
 
 async function getBabyStatus() {
   const res = await fetch(`${BASE}/baby/status`, {
@@ -636,7 +634,7 @@ console.log(`Baby is ${status.status} since ${status.since}`);
 ```yaml
 # configuration.yaml
 rest:
-  - resource: https://api.cradlewise.com/api/v1/baby/status
+  - resource: https://integrations.cradlewise.com/api/v1/baby/status
     headers:
       Authorization: "Bearer cw_your_token_here"
     scan_interval: 30
@@ -678,23 +676,23 @@ automation:
 ```bash
 # Baby status
 curl -H "Authorization: Bearer $TOKEN" \
-  https://api.cradlewise.com/api/v1/baby/status
+  https://integrations.cradlewise.com/api/v1/baby/status
 
 # Weekly sleep graph
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 
 # Day metrics for a specific day
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-12%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-12%2000:00:00&end_time=2026-03-13%2000:00:00"
 
 # Sleep sessions (c-chart) for last 24 hours
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-12%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-12%2000:00:00&end_time=2026-03-13%2000:00:00"
 
 # Monthly trends (3 months)
 curl -H "Authorization: Bearer $TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2026-01-01%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2026-01-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 ---

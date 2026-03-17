@@ -23,7 +23,7 @@ GET /api/v1/sleep/weekly-sleep-metrics
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-sleep-metrics?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-sleep-metrics?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -170,7 +170,7 @@ Set `start_time` to 7 days ago at midnight and `end_time` to today at midnight:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/weekly-sleep-metrics?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/weekly-sleep-metrics?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Typical results: 7 entries in `sleep_graph_metrics.plot_values` (one per day) and ~20-30 entries in `nap_planner_metrics.plot_values` (one per sleep segment).
@@ -289,7 +289,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 7 days
 end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)

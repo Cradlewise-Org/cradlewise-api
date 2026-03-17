@@ -14,7 +14,7 @@ No query parameters. The baby is identified from your token.
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  https://api.cradlewise.com/api/v1/baby/status
+  https://integrations.cradlewise.com/api/v1/baby/status
 ```
 
 ---
@@ -158,7 +158,7 @@ The 2/minute limit is the binding constraint for most users, not the daily cap.
 
 **No `Authorization` header:**
 ```bash
-curl https://api.cradlewise.com/api/v1/baby/status
+curl https://integrations.cradlewise.com/api/v1/baby/status
 ```
 ```json
 {"detail": "Missing authorization header"}
@@ -166,7 +166,7 @@ curl https://api.cradlewise.com/api/v1/baby/status
 
 **Malformed header (missing `Bearer` prefix):**
 ```bash
-curl -H "Authorization: cw_your_token" https://api.cradlewise.com/api/v1/baby/status
+curl -H "Authorization: cw_your_token" https://integrations.cradlewise.com/api/v1/baby/status
 ```
 ```json
 {"detail": "Missing authorization header"}
@@ -175,7 +175,7 @@ curl -H "Authorization: cw_your_token" https://api.cradlewise.com/api/v1/baby/st
 **Invalid or revoked token:**
 ```bash
 curl -H "Authorization: Bearer cw_invalid_or_revoked_token" \
-  https://api.cradlewise.com/api/v1/baby/status
+  https://integrations.cradlewise.com/api/v1/baby/status
 ```
 ```json
 {"detail": "Invalid token"}
@@ -207,7 +207,7 @@ No sleep events recorded for this baby (new crib, never used):
 Only `GET` is supported:
 ```bash
 curl -X POST -H "Authorization: Bearer YOUR_TOKEN" \
-  https://api.cradlewise.com/api/v1/baby/status
+  https://integrations.cradlewise.com/api/v1/baby/status
 ```
 ```json
 {"detail": "Method Not Allowed"}
@@ -254,7 +254,7 @@ import requests, time
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-URL = "https://api.cradlewise.com/api/v1/baby/status"
+URL = "https://integrations.cradlewise.com/api/v1/baby/status"
 
 last = None
 while True:
@@ -275,7 +275,7 @@ while True:
 
 ```yaml
 rest:
-  - resource: https://api.cradlewise.com/api/v1/baby/status
+  - resource: https://integrations.cradlewise.com/api/v1/baby/status
     headers:
       Authorization: "Bearer cw_your_token_here"
     scan_interval: 30

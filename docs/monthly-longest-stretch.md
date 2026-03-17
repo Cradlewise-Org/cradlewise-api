@@ -23,7 +23,7 @@ GET /api/v1/sleep/monthly-longest-stretch
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-longest-stretch?start_time=2025-12-01%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-longest-stretch?start_time=2025-12-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -100,7 +100,7 @@ This applies to all sleep endpoints, not just Monthly Longest Stretch.
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-longest-stretch?start_time=2025-09-01%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-longest-stretch?start_time=2025-09-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Returns one entry per month where sleep data exists.
@@ -113,7 +113,7 @@ from datetime import datetime
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 resp = requests.get(f"{BASE}/sleep/monthly-longest-stretch", headers=HEADERS, params={
     "start_time": "2025-09-01 00:00:00",
@@ -238,7 +238,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 6 months
 end = datetime.now()

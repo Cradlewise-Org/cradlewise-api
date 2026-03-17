@@ -19,7 +19,7 @@ if not TOKEN:
     print("Set CRADLEWISE_TOKEN environment variable")
     sys.exit(1)
 
-BASE_URL = "https://api.cradlewise.com/api/v1"
+BASE_URL = "https://integrations.cradlewise.com/api/v1"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 POLL_INTERVAL = 30  # seconds
 

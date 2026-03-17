@@ -21,7 +21,7 @@ GET /api/v1/sleep/day-metrics
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-10%2000:00:00&end_time=2026-03-11%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-10%2000:00:00&end_time=2026-03-11%2000:00:00"
 ```
 
 ---
@@ -171,7 +171,7 @@ When the range spans multiple days, `metrics` contains one entry per day:
 ```bash
 # 3-day range
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-08%2000:00:00&end_time=2026-03-11%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-08%2000:00:00&end_time=2026-03-11%2000:00:00"
 ```
 
 ```python

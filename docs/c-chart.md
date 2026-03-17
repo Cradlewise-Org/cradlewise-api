@@ -21,7 +21,7 @@ GET /api/v1/sleep/c-chart
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-10%2000:00:00&end_time=2026-03-11%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-10%2000:00:00&end_time=2026-03-11%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -175,7 +175,7 @@ Set `start_time` to midnight and `end_time` to the next midnight:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-10%2000:00:00&end_time=2026-03-11%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-10%2000:00:00&end_time=2026-03-11%2000:00:00"
 ```
 
 Note: Sessions that **span midnight** are included if any part falls within the window. A session starting at 10:47 PM on March 9th and ending at 3:48 AM on March 10th will appear in a March 10 query.
@@ -185,7 +185,7 @@ Note: Sessions that **span midnight** are included if any part falls within the 
 ```bash
 # 7 days
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Typical results for a 7-day window: ~9 sessions, ~16 events, 7 day_aggregate entries.
@@ -197,7 +197,7 @@ You can query any time window, not just full days:
 ```bash
 # 1-hour window
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-10%2002:00:00&end_time=2026-03-10%2003:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-10%2002:00:00&end_time=2026-03-10%2003:00:00"
 ```
 
 Returns sessions active during that hour.
@@ -311,7 +311,7 @@ from datetime import datetime, timedelta
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 # Last 24 hours
 end = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)

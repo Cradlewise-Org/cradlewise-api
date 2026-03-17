@@ -10,7 +10,7 @@
 # ──────────────────────────────────────────────
 
 rest:
-  - resource: https://api.cradlewise.com/api/v1/baby/status
+  - resource: https://integrations.cradlewise.com/api/v1/baby/status
     headers:
       Authorization: "Bearer cw_your_token_here"
     scan_interval: 30

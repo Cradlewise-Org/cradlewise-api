@@ -23,7 +23,7 @@ GET /api/v1/sleep/monthly-sleep-graph
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-graph?start_time=2025-01-01%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-graph?start_time=2025-01-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Note: URL-encode the space as `%20`.
@@ -100,7 +100,7 @@ Set `start_time` to 12 months ago and `end_time` to today:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_TOKEN" \
-  "https://api.cradlewise.com/api/v1/sleep/monthly-sleep-graph?start_time=2025-03-01%2000:00:00&end_time=2026-03-13%2000:00:00"
+  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-graph?start_time=2025-03-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 Returns up to ~12 entries in `plot_values`, one per month.
@@ -113,7 +113,7 @@ from datetime import datetime
 
 TOKEN = "cw_your_token_here"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
-BASE = "https://api.cradlewise.com/api/v1"
+BASE = "https://integrations.cradlewise.com/api/v1"
 
 resp = requests.get(f"{BASE}/sleep/monthly-sleep-graph", headers=HEADERS, params={
     "start_time": "2025-01-01 00:00:00",

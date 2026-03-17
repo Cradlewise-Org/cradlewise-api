@@ -11,7 +11,7 @@ if (!TOKEN) {
   process.exit(1);
 }
 
-const BASE = "https://api.cradlewise.com/api/v1";
+const BASE = "https://integrations.cradlewise.com/api/v1";
 
 async function fetchAPI(path, params = {}) {
   const url = new URL(`${BASE}${path}`);
