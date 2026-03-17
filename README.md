@@ -37,19 +37,13 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
   - [Baby Status](#baby-status)
   - [Sleep Sessions (C-Chart)](#sleep-sessions-c-chart)
   - [Day Metrics](#day-metrics)
-  - [Weekly Sleep Graph](#weekly-sleep-graph)
-  - [Weekly Rise & Bed Time](#weekly-rise--bed-time)
-  - [Weekly Nap Planner](#weekly-nap-planner)
-  - [Weekly Sleep Metrics](#weekly-sleep-metrics)
-  - [Weekly Longest Stretch](#weekly-longest-stretch)
-  - [Monthly Sleep Graph](#monthly-sleep-graph)
-  - [Monthly Rise & Bed Time](#monthly-rise--bed-time)
-  - [Monthly Longest Stretch](#monthly-longest-stretch)
-  - [Monthly Sleep Metrics](#monthly-sleep-metrics)
+- [No Data Responses](#no-data-responses)
 - [Rate Limits](#rate-limits)
 - [Error Codes](#error-codes)
 - [Examples](#examples)
 - [Detailed Endpoint Documentation](#detailed-endpoint-documentation)
+- [Roadmap](#roadmap)
+- [Versioning](#versioning)
 - [Changelog](#changelog)
 - [FAQ](#faq)
 
@@ -197,7 +191,7 @@ GET /api/v1/sleep/c-chart?start_time=2026-03-12 00:00:00&end_time=2026-03-13 00:
 | `events` | array | Sleep/wake transition events within sessions |
 | `soothe_events` | array | Bounce/sound soothe activations |
 
-> **Note:** The response may include events that started before your `start_time` if they belong to a session that overlaps with your query window. This is by design — sessions are returned whole, not truncated at query boundaries.
+> **Note:** The response may include events and sessions that started before your `start_time`. This happens in two cases: (1) a session that overlaps your query window is returned whole, not truncated at boundaries, and (2) on days with no crib activity, the API may return the most recent prior event for context. Filter by timestamp on your end if you need strict date boundaries.
 
 > **Note:** The `video_history_data` array contains thumbnail URLs on an internal domain. These URLs may not be accessible externally and are not part of the supported API surface. Do not build integrations against this field.
 
@@ -231,12 +225,12 @@ GET /api/v1/sleep/day-metrics?start_time=2026-03-12 00:00:00&end_time=2026-03-13
           }
         },
         {
-          "type": "total_sleep",
-          "header": "TOTAL SLEEP",
+          "type": "info",
+          "header": "LONGEST STRETCH",
           "data": {
-            "value": 720,
-            "display_value": "12h 0m",
-            "description": "total sleep"
+            "value": 540,
+            "display_value": "9h 0m",
+            "description": "longest stretch"
           }
         }
       ]
@@ -245,276 +239,77 @@ GET /api/v1/sleep/day-metrics?start_time=2026-03-12 00:00:00&end_time=2026-03-13
 }
 ```
 
-| Banner Type | Description |
-|-------------|-------------|
-| `soothes` | Number of bounce/sound soothe activations |
-| `total_sleep` | Total sleep duration for the day |
-| `night_sleep` | Night sleep duration |
-| `day_sleep` | Daytime nap duration |
-| `longest_stretch` | Longest continuous sleep stretch |
-| `wake_windows` | Average time between naps |
-| `naps` | Number of naps |
+**Banners:** Use the `header` field to identify each metric. The `type` field is not unique — most banners use `type: "info"` as a generic value.
 
-> **Note:** The `type` field in the actual response may differ from the values listed above (e.g., `info` instead of specific types like `total_sleep`). Use the `header` string to identify the metric reliably rather than keying off `type`.
+| Banner `header` | `type` | Description |
+|-----------------|--------|-------------|
+| `SOOTHES` | `soothes` | Number of bounce/sound soothe activations |
+| `RISE TIME` | `info` | Morning wake time |
+| `BED TIME` | `info` | Evening bed time |
+| `NAPS` | `naps` | Number of naps |
+| `LONGEST STRETCH` | `info` | Longest continuous sleep stretch |
+| `TIME IN BED` | `info` | Total time spent in crib |
+| `AWAKE IN BED` | `info` | Time spent awake while in crib |
+
+> **Important:** Always key off the `header` string (e.g., `"LONGEST STRETCH"`) rather than `type` when parsing banners programmatically. The `type` field is not reliable for identification.
 
 ---
 
-### Weekly Sleep Graph `Coming Soon`
+## No Data Responses
 
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
+When querying a date range with no crib activity, endpoints still return `200` but with empty or null data. Here's what to expect:
 
-Daily sleep totals for a week, broken down by day vs. night sleep.
-
-```
-GET /api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
+**c-chart** — empty `sessions` array, but may include a stale event from the most recent prior session:
 
 ```json
 {
   "timezone": "America/Los_Angeles",
-  "age_banner_text": "13 months old",
-  "avg_sleep_in_mins": 720.0,
-  "avg_day_sleep_in_mins": 180.0,
-  "avg_night_sleep_in_mins": 540.0,
-  "plot_values": [
+  "sessions": [],
+  "events": [
     {
-      "day_sleep_in_mins": 200.0,
-      "night_sleep_in_mins": 560.0,
-      "total_sleep_in_mins": 760.0,
-      "date": "2026-03-06 00:00:00.000000"
+      "start_time": "2026-03-13 06:45:00.000000",
+      "description": "picked up"
+    }
+  ],
+  "soothe_events": [],
+  "day_aggregates": {}
+}
+```
+
+**day-metrics** — banners with `null` values and empty strings:
+
+```json
+{
+  "metrics": [
+    {
+      "date": "2026-03-17 00:00:00.000000",
+      "banners": [
+        {
+          "type": "info",
+          "header": "LONGEST STRETCH",
+          "data": {
+            "value": null,
+            "display_value": "",
+            "description": "longest stretch"
+          }
+        }
+      ]
     }
   ]
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `avg_sleep_in_mins` | float | Average total sleep per day across the range |
-| `avg_day_sleep_in_mins` | float | Average daytime sleep |
-| `avg_night_sleep_in_mins` | float | Average nighttime sleep |
-| `plot_values[].date` | string | Day this data point represents |
-| `plot_values[].total_sleep_in_mins` | float | Total sleep that day (minutes) |
-
----
-
-### Weekly Rise & Bed Time `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-Average and daily rise/bed times for the week.
-
-```
-GET /api/v1/sleep/weekly-rise-and-bed-time?start_time=2026-03-06 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
+**baby/status** — always returns current status regardless of crib activity:
 
 ```json
 {
-  "day_start_time": "2026-03-06 07:00:00.000000",
-  "avg_rise_time": "07:15",
-  "avg_bed_time": "19:30",
-  "plot_values": [
-    {
-      "rise_time": "07:20",
-      "bed_time": "19:45",
-      "date": "2026-03-06 07:00:00.000000"
-    }
-  ]
+  "status": "away",
+  "since": "2026-03-13T06:45:00.000000Z",
+  "is_in_crib": false
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `avg_rise_time` | string | Average morning wake time (HH:MM) |
-| `avg_bed_time` | string | Average evening bed time (HH:MM) |
-| `plot_values[].rise_time` | string | Rise time for that day (empty string if no data) |
-| `plot_values[].bed_time` | string | Bed time for that day (empty string if no data) |
-
----
-
-### Weekly Nap Planner `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-Nap duration and wake window trends for the week.
-
-```
-GET /api/v1/sleep/weekly-nap-planner?start_time=2026-03-06 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "day_start_time": "2026-03-06 07:00:00.000000",
-  "avg_nap_duration_in_mins": 90.0,
-  "avg_wake_window_in_mins": 180.0,
-  "avg_day_nap_duration_in_mins": 90.0,
-  "avg_night_nap_duration_in_mins": 0,
-  "avg_day_wake_window_in_mins": 180.0,
-  "avg_night_wake_window_in_mins": 0,
-  "plot_values": [...]
-}
-```
-
----
-
-### Weekly Sleep Metrics `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-Combined weekly view — aggregates sleep graph, nap planner, rise/bed time, and longest stretch into one response.
-
-```
-GET /api/v1/sleep/weekly-sleep-metrics?start_time=2026-03-06 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "sleep_graph_metrics": { ... },
-  "nap_planner_metrics": { ... },
-  "rise_and_bed_time_metrics": { ... },
-  "longest_stretch_metrics": { ... }
-}
-```
-
-Each sub-object contains the same data as its individual endpoint. Use this to fetch all weekly data in a single request.
-
----
-
-### Weekly Longest Stretch `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-Longest continuous sleep stretch per day across the week.
-
-```
-GET /api/v1/sleep/weekly-longest-stretch?start_time=2026-03-06 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "avg_longest_stretch_in_mins": 540.0,
-  "avg_longest_stretch_display_text": "9h 0m",
-  "plot_values": [
-    {
-      "longest_stretch_in_mins": 560.0,
-      "longest_stretch_in_hours": 9.3,
-      "longest_stretch_display_text": "9h 20m",
-      "date": "2026-03-06 07:00:00.000000"
-    }
-  ]
-}
-```
-
----
-
-### Monthly Sleep Graph `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-Monthly sleep totals over a longer date range.
-
-```
-GET /api/v1/sleep/monthly-sleep-graph?start_time=2026-01-01 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "age_banner_text": "13 months old",
-  "plot_values": [
-    {
-      "day_sleep_in_mins": 180.0,
-      "night_sleep_in_mins": 540.0,
-      "total_sleep_in_mins": 720.0,
-      "month": "2026-01-15 00:00:00.000000"
-    }
-  ]
-}
-```
-
-The `month` field represents the month this data point covers. One entry per month in the range.
-
----
-
-### Monthly Rise & Bed Time `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-```
-GET /api/v1/sleep/monthly-rise-and-bed-time?start_time=2026-01-01 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "plot_values": [
-    {
-      "rise_time": "2026-03-13 07:20:00.000000",
-      "bed_time": "2026-03-13 19:30:00.000000",
-      "month": "2026-03-13 00:00:00.000000"
-    }
-  ]
-}
-```
-
----
-
-### Monthly Longest Stretch `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-```
-GET /api/v1/sleep/monthly-longest-stretch?start_time=2026-01-01 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "plot_values": [
-    {
-      "longest_stretch_in_mins": 540.0,
-      "longest_stretch_in_hours": 9.0,
-      "longest_stretch_display_text": "9h 0m",
-      "month": "2026-03-13 00:00:00.000000"
-    }
-  ]
-}
-```
-
----
-
-### Monthly Sleep Metrics `Coming Soon`
-
-> **Coming Soon:** This endpoint is under development and not yet available. Requests may return `404` or unexpected responses.
-
-Combined monthly view — all monthly metrics in one response.
-
-```
-GET /api/v1/sleep/monthly-sleep-metrics?start_time=2026-01-01 00:00:00&end_time=2026-03-13 00:00:00
-```
-
-**Response:**
-
-```json
-{
-  "sleep_graph_metrics": { ... },
-  "rise_and_bed_time_metrics": { ... },
-  "longest_stretch_metrics": { ... },
-  "avg_no_of_naps_metrics": { ... }
-}
-```
+> **Tip:** Check for `null` values and empty `sessions` arrays before processing. Don't assume every day has data.
 
 ---
 
@@ -573,7 +368,7 @@ For home automation, poll `/baby/status` every 30 seconds only during the hours 
 
 ## Examples
 
-### Python: Weekly Sleep Summary
+### Python: Daily Sleep Summary
 
 ```python
 import requests
@@ -582,21 +377,22 @@ TOKEN = "cw_your_token_here"
 BASE = "https://integrations.cradlewise.com/api/v1"
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 
-# Fetch last 7 days of sleep data
+# Fetch today's key metrics
 resp = requests.get(
-    f"{BASE}/sleep/weekly-sleep-graph",
+    f"{BASE}/sleep/day-metrics",
     headers=HEADERS,
     params={
-        "start_time": "2026-03-06 00:00:00",
+        "start_time": "2026-03-12 00:00:00",
         "end_time": "2026-03-13 00:00:00",
     },
 )
 data = resp.json()
 
-print(f"Average sleep: {data['avg_sleep_in_mins']:.0f} min/day")
-for day in data["plot_values"]:
-    total_hrs = day["total_sleep_in_mins"] / 60
-    print(f"  {day['date'][:10]}: {total_hrs:.1f}h total")
+for day in data["metrics"]:
+    print(f"Date: {day['date'][:10]}")
+    for banner in day["banners"]:
+        val = banner["data"]["display_value"] or "—"
+        print(f"  {banner['header']}: {val}")
 ```
 
 ### Python: Home Automation Status Poller
@@ -707,10 +503,6 @@ automation:
 curl -H "Authorization: Bearer $TOKEN" \
   https://integrations.cradlewise.com/api/v1/baby/status
 
-# Weekly sleep graph
-curl -H "Authorization: Bearer $TOKEN" \
-  "https://integrations.cradlewise.com/api/v1/sleep/weekly-sleep-graph?start_time=2026-03-06%2000:00:00&end_time=2026-03-13%2000:00:00"
-
 # Day metrics for a specific day
 curl -H "Authorization: Bearer $TOKEN" \
   "https://integrations.cradlewise.com/api/v1/sleep/day-metrics?start_time=2026-03-12%2000:00:00&end_time=2026-03-13%2000:00:00"
@@ -718,23 +510,26 @@ curl -H "Authorization: Bearer $TOKEN" \
 # Sleep sessions (c-chart) for last 24 hours
 curl -H "Authorization: Bearer $TOKEN" \
   "https://integrations.cradlewise.com/api/v1/sleep/c-chart?start_time=2026-03-12%2000:00:00&end_time=2026-03-13%2000:00:00"
-
-# Monthly trends (3 months)
-curl -H "Authorization: Bearer $TOKEN" \
-  "https://integrations.cradlewise.com/api/v1/sleep/monthly-sleep-metrics?start_time=2026-01-01%2000:00:00&end_time=2026-03-13%2000:00:00"
 ```
 
 ---
 
 ## Detailed Endpoint Documentation
 
-Each endpoint has a comprehensive deep-dive doc with full response schemas, edge cases, practical code examples, and gotchas discovered through testing.
+Each stable endpoint has a comprehensive deep-dive doc with full response schemas, edge cases, practical code examples, and gotchas discovered through testing.
+
+**Stable endpoints:**
 
 | Endpoint | Doc |
 |----------|-----|
 | Baby Status | [docs/baby-status.md](docs/baby-status.md) |
 | Sleep Sessions (C-Chart) | [docs/c-chart.md](docs/c-chart.md) |
 | Day Metrics | [docs/day-metrics.md](docs/day-metrics.md) |
+
+**Planned endpoints** (schemas are drafts — may change before release):
+
+| Endpoint | Doc |
+|----------|-----|
 | Weekly Sleep Graph | [docs/weekly-sleep-graph.md](docs/weekly-sleep-graph.md) |
 | Weekly Rise & Bed Time | [docs/weekly-rise-and-bed-time.md](docs/weekly-rise-and-bed-time.md) |
 | Weekly Nap Planner | [docs/weekly-nap-planner.md](docs/weekly-nap-planner.md) |
@@ -747,11 +542,45 @@ Each endpoint has a comprehensive deep-dive doc with full response schemas, edge
 
 ---
 
+## Roadmap
+
+These endpoints are planned but **not yet available**. Requests will return `404`. We're sharing the planned schemas so you can see what's coming and plan your integrations accordingly.
+
+| Endpoint | Description | Planned Schema |
+|----------|-------------|----------------|
+| `/api/v1/sleep/weekly-sleep-graph` | Daily sleep totals for a week (day vs. night) | [docs/weekly-sleep-graph.md](docs/weekly-sleep-graph.md) |
+| `/api/v1/sleep/weekly-rise-and-bed-time` | Rise/bed times for the week | [docs/weekly-rise-and-bed-time.md](docs/weekly-rise-and-bed-time.md) |
+| `/api/v1/sleep/weekly-nap-planner` | Nap duration and wake window trends | [docs/weekly-nap-planner.md](docs/weekly-nap-planner.md) |
+| `/api/v1/sleep/weekly-sleep-metrics` | All weekly metrics in one response | [docs/weekly-sleep-metrics.md](docs/weekly-sleep-metrics.md) |
+| `/api/v1/sleep/weekly-longest-stretch` | Longest sleep stretch per day (week) | [docs/weekly-longest-stretch.md](docs/weekly-longest-stretch.md) |
+| `/api/v1/sleep/monthly-sleep-graph` | Monthly sleep totals | [docs/monthly-sleep-graph.md](docs/monthly-sleep-graph.md) |
+| `/api/v1/sleep/monthly-rise-and-bed-time` | Rise/bed times (monthly) | [docs/monthly-rise-and-bed-time.md](docs/monthly-rise-and-bed-time.md) |
+| `/api/v1/sleep/monthly-longest-stretch` | Longest stretch (monthly) | [docs/monthly-longest-stretch.md](docs/monthly-longest-stretch.md) |
+| `/api/v1/sleep/monthly-sleep-metrics` | All monthly metrics in one response | [docs/monthly-sleep-metrics.md](docs/monthly-sleep-metrics.md) |
+
+Also on the roadmap:
+- **Webhooks / push notifications** — real-time status change events (no polling required)
+- **Self-service token generation** from [mycrib.cradlewise.com](https://mycrib.cradlewise.com)
+- **MCP server** for native AI tool integration
+- **`/baby/profile` endpoint** — baby's day start time, timezone, and crib config (currently only visible in the app)
+
+---
+
+## Versioning
+
+The current API version is `v1`, reflected in the base URL (`/api/v1/`).
+
+- **Stable endpoints** have a locked schema. We will not make breaking changes to stable endpoints within `v1`.
+- **When `v2` ships**, `v1` will continue to work for a minimum of 6 months with a deprecation notice. We'll announce version changes via email to all beta testers and in the Changelog below.
+- **Non-breaking additions** (new fields in responses, new endpoints) may be added to `v1` at any time. Your code should ignore unknown fields gracefully.
+
+---
+
 ## Changelog
 
 | Date | Change |
 |------|--------|
-| 2026-03-17 | Beta endpoints marked as Coming Soon; documentation accuracy improvements |
+| 2026-03-17 | Moved planned endpoints to Roadmap section; fixed day-metrics banner documentation to match actual API response; added No Data Responses section; added Versioning guidance |
 | 2026-03-14 | Initial public beta release — stable endpoints: baby/status, c-chart, day-metrics |
 
 ---
@@ -785,8 +614,8 @@ Yes — paste this README into any AI assistant and ask it to build integrations
 **I found a bug or have a feature request.**
 Email **support@cradlewise.com**. We read everything, but this is a side project to support tinkerers — we may not be able to address every issue or request immediately.
 
-**What does "Coming Soon" mean on an endpoint?**
-Coming Soon endpoints are under active development and not yet available. Requests to these endpoints may return `404` or unexpected responses. Stable endpoints have a locked schema and are safe to build automations on.
+**What about the weekly/monthly endpoints?**
+They're on the [Roadmap](#roadmap) but not yet live. Requests will return `404`. The planned schemas are documented so you can see what's coming. Only the three stable endpoints (baby/status, c-chart, day-metrics) are available today.
 
 **Is there an SLA or uptime guarantee?**
 No. This API is provided as-is, without guarantees around uptime, latency, or data accuracy. It runs on the same infrastructure as our internal tools, but is not monitored to production standards.
@@ -795,20 +624,27 @@ No. This API is provided as-is, without guarantees around uptime, latency, or da
 
 ## Endpoint Quick Reference
 
-| Method | Endpoint | Params | Status | Description |
-|--------|----------|--------|--------|-------------|
-| GET | `/api/v1/baby/status` | — | Stable | Real-time baby status |
-| GET | `/api/v1/sleep/c-chart` | `start_time`, `end_time` | Stable | Individual sleep sessions |
-| GET | `/api/v1/sleep/day-metrics` | `start_time`, `end_time` | Stable | Daily key metrics |
-| GET | `/api/v1/sleep/weekly-sleep-graph` | `start_time`, `end_time` | Coming Soon | Daily sleep totals (week) |
-| GET | `/api/v1/sleep/weekly-rise-and-bed-time` | `start_time`, `end_time` | Coming Soon | Rise/bed times (week) |
-| GET | `/api/v1/sleep/weekly-nap-planner` | `start_time`, `end_time` | Coming Soon | Nap/wake windows (week) |
-| GET | `/api/v1/sleep/weekly-sleep-metrics` | `start_time`, `end_time` | Coming Soon | All weekly metrics combined |
-| GET | `/api/v1/sleep/weekly-longest-stretch` | `start_time`, `end_time` | Coming Soon | Longest sleep stretch (week) |
-| GET | `/api/v1/sleep/monthly-sleep-graph` | `start_time`, `end_time` | Coming Soon | Monthly sleep totals |
-| GET | `/api/v1/sleep/monthly-rise-and-bed-time` | `start_time`, `end_time` | Coming Soon | Rise/bed times (monthly) |
-| GET | `/api/v1/sleep/monthly-longest-stretch` | `start_time`, `end_time` | Coming Soon | Longest stretch (monthly) |
-| GET | `/api/v1/sleep/monthly-sleep-metrics` | `start_time`, `end_time` | Coming Soon | All monthly metrics combined |
+**Available now:**
+
+| Method | Endpoint | Params | Description |
+|--------|----------|--------|-------------|
+| GET | `/api/v1/baby/status` | — | Real-time baby status |
+| GET | `/api/v1/sleep/c-chart` | `start_time`, `end_time` | Individual sleep sessions |
+| GET | `/api/v1/sleep/day-metrics` | `start_time`, `end_time` | Daily key metrics |
+
+**Planned** (see [Roadmap](#roadmap) for details — these are not yet live):
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/sleep/weekly-sleep-graph` | Daily sleep totals (week) |
+| GET | `/api/v1/sleep/weekly-rise-and-bed-time` | Rise/bed times (week) |
+| GET | `/api/v1/sleep/weekly-nap-planner` | Nap/wake windows (week) |
+| GET | `/api/v1/sleep/weekly-sleep-metrics` | All weekly metrics combined |
+| GET | `/api/v1/sleep/weekly-longest-stretch` | Longest sleep stretch (week) |
+| GET | `/api/v1/sleep/monthly-sleep-graph` | Monthly sleep totals |
+| GET | `/api/v1/sleep/monthly-rise-and-bed-time` | Rise/bed times (monthly) |
+| GET | `/api/v1/sleep/monthly-longest-stretch` | Longest stretch (monthly) |
+| GET | `/api/v1/sleep/monthly-sleep-metrics` | All monthly metrics combined |
 
 ---
 
